@@ -3,8 +3,8 @@ const router = express.Router();
 const User = require("../modal/Users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const secretkey =
-  "sdhwdqwkeiq2e46237ebsandq27ebqwdsa8e621yqwgeqw8e7t12gqbe8gq6";
+require("dotenv").config();
+const secreteKey = process.env.SecreteKey;
 // Register
 router.post("/register", async (req, res) => {
   try {
@@ -51,7 +51,7 @@ router.post("/login", async (req, res) => {
         .json({ status: true, message: "Invalid Credential" });
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, secretkey, {
+    const token = jwt.sign({ id: user._id, email: user.email }, secreteKey, {
       expiresIn: "3hr",
     });
     return res
@@ -70,14 +70,20 @@ router.post("/login", async (req, res) => {
 
 router.post("/profile", async (req, res) => {
   try {
+    // this below code is commented beacuse i initialy i used token from login response token
     const token = req.headers?.authorization?.split(" ")[1];
+
+    // we will get the token from header cookies
+    // const token = req?.headers?.cookie?.split("=")[1];
+    // const token = req?.cookies?.authToken;
+    console.log(token);
     if (!token) {
       return res.status(400).json({
         status: false,
         message: "Access Denied",
       });
     }
-    jwt.verify(token, secretkey, async (err, decode) => {
+    jwt.verify(token, secreteKey, async (err, decode) => {
       const user = await User.findById(decode?.id);
       if (!user) {
         return res.status(400).json({
@@ -97,6 +103,12 @@ router.post("/profile", async (req, res) => {
       error: error.message,
     });
   }
+});
+
+// Logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("authToken");
+  res.status(201).json({ status: true, message: "logout success" });
 });
 
 module.exports = router;

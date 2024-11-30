@@ -1,34 +1,9 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+// import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
 
 const Profile = () => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState("");
-
-  const token = JSON.parse(localStorage.getItem("token"));
-
-  const fetchData = () => {
-    const header = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    axios
-      .post("http://localhost:3001/user/profile", {}, header)
-      .then((res) => {
-        setLoading(false);
-        setData(res.data.data);
-      })
-      .catch((err) => {
-        console.log("Error while fetch data", err);
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const { data, loading } = useContext(AuthContext);
 
   return (
     <div>
@@ -38,10 +13,10 @@ const Profile = () => {
       <div className="max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Name : {data.name}
+            Name : {data?.name}
           </h2>
-          <p className="text-gray-700 text-base mb-2">Email: {data.email}</p>
-          <p className="text-gray-700 text-base">ID: {data.id}</p>
+          <p className="text-gray-700 text-base mb-2">Email: {data?.email}</p>
+          <p className="text-gray-700 text-base">ID: {data?.id}</p>
         </div>
       </div>
     </div>

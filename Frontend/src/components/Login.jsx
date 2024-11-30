@@ -1,22 +1,29 @@
 import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "./context/AuthContext";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  if (isAuthenticated) return <Navigate to="/profile" />;
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = { email: email, password: password };
     axios
       .post("http://localhost:3001/user/login", payload)
       .then((res) => {
+        setIsAuthenticated(res.data.status);
+        Cookies.set("authToken", res.data.token);
         setLoading(false);
-        toast("Registration Successful");
-        localStorage.setItem("token", JSON.stringify(res.data.token));
+        toast("Login Successful");
+        // localStorage.setItem("token", JSON.stringify(res.data.token));
         navigate("/profile");
         if (res) {
           setPassword("");

@@ -5,6 +5,8 @@ import Registration from "./components/Registration";
 import Profile from "./components/Profile";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
+// import BlogList from "./BlogPages/BlogList";
+// import CreateBlog from "./BlogPages/CreateBlog";
 
 const App = () => {
   return (
