@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../modal/Users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const authMiddleware = require("../components/middleware/authMiddleware");
 require("dotenv").config();
 const secreteKey = process.env.SecreteKey;
 // Register
@@ -68,34 +69,44 @@ router.post("/login", async (req, res) => {
 
 // Profile
 
-router.post("/profile", async (req, res) => {
+router.post("/profile", authMiddleware, async (req, res) => {
   try {
-    // this below code is commented beacuse i initialy i used token from login response token
-    const token = req.headers?.authorization?.split(" ")[1];
+    // Below comented code is initial code later i have created middle ware so all those code in authmidlleware file
+    // // this below code is commented beacuse i initialy i used token from login response token
+    // const token = req.headers?.authorization?.split(" ")[1];
 
     // we will get the token from header cookies
     // const token = req?.headers?.cookie?.split("=")[1];
     // const token = req?.cookies?.authToken;
-    console.log(token);
-    if (!token) {
-      return res.status(400).json({
-        status: false,
-        message: "Access Denied",
-      });
-    }
-    jwt.verify(token, secreteKey, async (err, decode) => {
-      const user = await User.findById(decode?.id);
-      if (!user) {
-        return res.status(400).json({
-          status: false,
-          message: "Invalid Token",
-        });
-      }
-      const userData = { id: user?.id, name: user?.name, email: user?.email };
-      return res
-        .status(201)
-        .json({ status: true, message: "Profile Data", data: userData });
-    });
+    // console.log(token);
+    // if (!token) {
+    //   return res.status(400).json({
+    //     status: false,
+    //     message: "Access Denied",
+    //   });
+    // }
+    // jwt.verify(token, secreteKey, async (err, decode) => {
+    //   const user = await User.findById(decode?.id);
+    //   if (!user) {
+    //     return res.status(400).json({
+    //       status: false,
+    //       message: "Invalid Token",
+    //     });
+    //   }
+    // console.log(req.user);
+    // const userData = {
+    //   id: req.user?.id,
+    //   name: req.user?.name,
+    //   email: req.user?.email,
+    // };
+    // return res
+    //   .status(201)
+    //   .json({ status: true, message: "Profile Data", data: userData });
+
+    const userData = req.user;
+    return res
+      .status(201)
+      .json({ status: true, message: "Profile Data", data: userData });
   } catch (error) {
     return res.status(400).json({
       status: false,

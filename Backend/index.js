@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const userRoute = require("./routes/userRoutes");
-// const blogRoute = require("./routes/blogRoutes");
+const blogRoute = require("./routes/blogRoutes");
 const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 app.use("/user", userRoute);
-// app.use("/blog", blogRoute);
+app.use("/blog", blogRoute);
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
