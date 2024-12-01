@@ -1,16 +1,33 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const CreateBlog = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  //   const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  let token = Cookies.get("authToken");
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log({ title, content });
+    let payload = { title, content };
+    axios
+      .post(`http://localhost:3001/blog/create-post`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        toast("Post Created.");
+        setContent("");
+        setTitle("");
+      })
+      .catch((err) => {
+        console.log("Error while fetch data", err);
+        setLoading(false);
+        toast("Something went Wrong");
+      });
   };
 
   return (
@@ -54,7 +71,7 @@ const CreateBlog = () => {
 
         <div className="flex items-center justify-between">
           <button
-            // disabled={loading}
+            disabled={loading}
             className="bg-blue-500 disabled:opacity-70 disabled:cursor-wait hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
