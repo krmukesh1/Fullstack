@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import BlogList from "./BlogPages/BlogList";
 import CreateBlog from "./BlogPages/CreateBlog";
 import BlogView from "./BlogPages/BlogView";
+import EditBlog from "./BlogPages/EditBlog";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/blog-list" element={<BlogList />} />
             <Route path="/create-blog" element={<CreateBlog />} />
+            <Route path="/edit-blog/:id" element={<EditBlog />} />
           </Route>
           <Route path="/" element={<Home />} />
           <Route path="/:id" element={<BlogView />} />

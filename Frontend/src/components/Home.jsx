@@ -47,7 +47,7 @@ const Home = () => {
           </p>
           <div className="flex items-center justify-between">
             <p className="text-gray-500 text-sm mb-2">
-              Author: {item?.author?.name}
+              Author: {item?.author}
             </p>
             <p className="text-gray-400 text-xs">
               {new Date(item?.updatedAt).toLocaleDateString()}
